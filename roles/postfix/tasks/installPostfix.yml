@@ -1,0 +1,71 @@
+---
+
+ # tasks file for postfix
+ - name: installing {{ postfix_package_name  }}
+   package:
+     name: "{{ postfix_package_name  }}"
+     state: latest
+
+ # updating postfix master file
+ - name: copy master.cf with port {{ postfix_port  }} on the server
+   template:
+     src: master.j2
+     dest: "{{ postfix_base_directory }}/{{ postfix_base_master_file }}"
+     mode: 0644
+     owner: root
+     group: root
+
+ #appending files
+ - name: appending {{ item.line  }}  tls file in the main.cf file
+   lineinfile:
+     dest: "{{ postfix_base_directory }}/{{ postfix_base_config_file  }}"
+     line: "{{ item.line }}"
+     state: present
+   with_items:
+     - { line: 'smtp_use_tls = yes' }
+     - { line: 'smtpd_tls_auth_only = no' }
+     - { line: 'smtpd_use_tls = yes' }
+     - { line: 'smtp_tls_security_level = may' }
+     - { line: 'smtpd_tls_security_level = may' }
+     - { line: 'smtpd_tls_key_file = /etc/postfix/ssl/smtpd.key' }
+     - { line: 'smtpd_tls_cert_file = /etc/postfix/ssl/smtpd.crt' }
+     - { line: 'smtpd_tls_CAfile = /etc/postfix/ssl/cacert.pem' }
+     - { line: 'smtpd_tls_loglevel = 1' }
+     - { line: 'smtp_tls_loglevel = 1' }
+     - { line: 'smtpd_tls_received_header = yes' }
+
+ #check if ssl direcotry already exist
+ - name: Ensures {{ smtpd_tls_path }} dir exists
+   file: path="{{ smtpd_tls_path }}" state=directory
+
+ #- name: creating /var/spool/postfixmulti
+ #  file:
+ #    path: /var/spool/postfixmulti
+ #    group: root
+ #    owner: root
+ #    state: directory
+ #    mode: 0755
+
+ #- name:  mounting file system for postfixmulti
+ #  shell: 'mount -t tmpfs -o size=1000M,mode=0755 tmpfs /var/spool/postfixmulti/'
+
+
+ #updating cert file in the
+ - name: Updating Cert files in the {{ smtpd_tls_path }}
+   copy:
+     src: "../files/{{ item }}"
+     dest:  /etc/postfix/ssl/{{ item }}
+     owner: root
+     group: root
+     mode: 0644
+   with_items:
+     - smtpd.key
+     - smtpd.crt
+     - cacert.pem
+
+
+ #Ensure postfix is enabled at boot
+ # - name: Ensure postfix is started and enabled at boot.
+ #   service:
+ #    name: postfix
+ #    state: started

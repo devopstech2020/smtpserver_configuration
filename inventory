@@ -1,0 +1,5 @@
+[mailservers]
+62.210.72.74 ansible_ssh_users=hardeep ansible_ssh_port=1922
+
+[testservers]
+192.168.2.10 ansible_ssh_user=root 

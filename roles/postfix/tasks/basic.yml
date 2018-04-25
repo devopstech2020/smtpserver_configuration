@@ -1,0 +1,39 @@
+---
+#setting time zone
+ - name: set timezone to "{{ time_zone }}"
+   command: timedatectl set-timezone "{{ time_zone }}"
+
+ #update yum install baic packages
+ - name: installing "{{ item }}"
+   yum: name="{{ item }}" state=present
+   with_items:
+       "{{ packages }}"
+
+ #starting ntp services
+ - name: starting ntp services
+   service: name=ntpd state=started
+
+ #starting named services
+ - name: starting ntp services
+   service: name=named state=started
+
+
+ #displaying updated time
+ - name: getting timedatectl
+   command: timedatectl status
+   register:
+     output
+
+ #creating log directory
+ - name: create "{{ scripts_dir }}"
+   file:
+    dest: "{{ scripts_dir }}"
+    state: directory
+
+  #setting host name
+ # - name: setting hostname to "{{ hostname }}"
+ #   shell: hostname="{{ hostname }}"
+
+  #printing time date
+ - name: printing date
+   debug: var=output.stdout_lines

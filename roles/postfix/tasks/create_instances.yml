@@ -1,0 +1,27 @@
+---
+  - name: creating postfix instances directory
+    file:
+      path: "{{ postfix_path }}"
+      state: directory
+      owner: root
+      group: root
+      mode: "u=rw,g=r,o=r"
+
+  - name: copy postfix base directory to instance
+    shell: cp -r /etc/postfix/* {{ postfix_path }}/
+
+  - name: copy main.cf
+    template:
+      src: main.j2
+      dest: "{{ postfix_path }}/main.cf"
+      mode: 0644
+      owner: root
+      group: root
+
+  - name: copy master.cf
+    template:
+      src: master.j2
+      dest: "{{ postfix_path }}/master.cf"
+      mode: 0644
+      owner: root
+      group: root

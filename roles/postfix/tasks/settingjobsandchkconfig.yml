@@ -1,0 +1,8 @@
+---
+  #setting crontab entries for postfix script after reboot
+  # Creates an entry like "PATH=/opt/bin" on top of crontab
+- name : making postfix script after reboot
+  cron:
+    name: "a job for reboot"
+    special_time: reboot
+    job: "bash -l {{ scripts_dir }}/postfix_restart.sh"

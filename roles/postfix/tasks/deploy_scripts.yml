@@ -1,0 +1,5 @@
+---
+  - name: copying scripts dir to scrips
+    copy:
+      src:  "../files/postfix_script.sh"
+      dest: "{{ scripts_dir }}/postfix_restart.sh"

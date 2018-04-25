@@ -1,0 +1,53 @@
+---
+
+ #basic variables
+ scripts_dir: /root/MailScripts/
+ time_zone: Asia/Kolkata
+##default variables for postfix
+ packages:
+   - ntp
+   - bind
+   - zlib
+   - bind-utils
+   - telnet
+
+ domains:
+   - tbamart.com
+#   - qurekamails.in
+
+ postfix_package_name: postfix
+ postfix_base_directory: /etc/postfix
+ postfix_base_config_file: main.cf
+ postfix_base_master_file: master.cf
+ postfix_inet_interfaces: localhost
+ postfix_inet_protocols: all
+ smtpd_tls_path: /etc/postfix/ssl
+ postfix_port: 625
+ postfix_mynetworks: 62.210.72.74, 212.83.139.146, 212.83.140.99, 62.210.10.109, 163.172.229.94, 51.15.153.60, 212.83.140.151, 212.83.140.153
+ postfix_ip_domains:
+        - { ip: 212.83.139.146, domain: tb-139146.tbamart.com}
+        - { ip: 212.83.140.99, domain: tb-140099.tbamart.com}
+        - { ip: 62.210.10.109, domain: tb-010109.tbamart.com}
+        - { ip: 163.172.229.94, domain: tb-229094.tbamart.com}
+        - { ip: 51.15.153.65, domain: tb-153065.tbamart.com}
+        - { ip: 51.15.153.60, domain: tb-153060.tbamart.com}
+        - { ip: 212.83.140.151, domain: tb-140151.tbamart.com}
+        - { ip: 212.83.140.153, domain: tb-140153.tbamart.com}
+        # - { ip: 104.222.98.109, domain: qkml-098109.qurekamails.in}
+        # - { ip: 104.222.98.233, domain: qkml-098233.qurekamails.in}
+        # - { ip: 104.222.98.234, domain: qkml-098234.qurekamails.in}
+
+ # default variables for epal repositories
+ epel_repo_url: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm"
+ epel_repo_gpg_key_url: "https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-{{ ansible_distribution_major_version }}"
+ epel_repofile_path: "/etc/yum.repos.d/epel.repo"
+
+
+#default setting for open dkim
+ dkimuser: opendkim
+ dkimgroup: opendkim
+ opendkim_package: opendkim
+ opendkim_config_file: /etc/opendkim.conf
+ opendkim_keyfile: /etc/opendkim/KeyTable
+ opendkim_signingfile: /etc/opendkim/SigningTable
+ opendkim_base_path: /etc/opendkim

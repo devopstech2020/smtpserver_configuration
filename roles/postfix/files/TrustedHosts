@@ -1,0 +1,23 @@
+##  page for file format.
+# OPENDKIM TRUSTED HOSTS
+# To use this file, uncomment the #ExternalIgnoreList and/or the #InternalHosts
+# option in /etc/opendkim.conf then restart OpenDKIM. Additional hosts
+# may be added on separate lines (IP addresses, hostnames, or CIDR ranges).
+# The localhost IP (127.0.0.1) should always be the first entry in this file.
+.tbamart.com
+mx.tbamart.com
+www.tbamart.com
+62.210.72.74
+212.83.139.146
+212.83.140.99
+62.210.10.109
+163.172.229.94
+51.15.153.60
+212.83.140.151
+212.83.140.153
+127.0.0.1
+::1
+localhost
+localhost.localdomain
+#host.example.com
+#192.168.1.0/24

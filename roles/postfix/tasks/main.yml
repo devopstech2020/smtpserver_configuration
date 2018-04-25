@@ -1,0 +1,23 @@
+---
+ #  #include yml to install and configure postfix
+ # - include: basic!.yml
+ # - include: installPostfix.yml
+ #
+ # #yml to creating epel repositories and install opendkim
+ # - include: installEpel.yml
+ # - include: configureOpendim.yml
+ #
+ # #task for creating postfix instances
+ # - include: create_instances.yml
+ #   vars:
+ #     postfix_hostname: "{{ item.domain  }}"
+ #     postfix_ip: "{{ item.ip  }}"
+ #     postfix_path: "/etc/postfix_{{ item.ip }}"
+ #     postfix_dir: "postfix_{{ item.ip }}"
+ #   with_items:
+ #      "{{ postfix_ip_domains }}"
+ #
+ # #deploy scripts.yml
+ # - include: deploy_scripts.yml
+
+ - include: settingjobsandchkconfig.yml

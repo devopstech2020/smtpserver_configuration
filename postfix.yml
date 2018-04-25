@@ -1,0 +1,7 @@
+---
+  - name: install postfix
+    hosts: mailservers
+    gather_facts: yes
+    sudo: yes	
+    roles:
+      - postfix

@@ -1,0 +1,2 @@
+default._domainkey	IN	TXT	( "v=DKIM1; k=rsa; "
+	  "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDC+OF0Ce6AYOli/v6WNi8uqYgTN1gzLe9wje0DE/dUgR21jPfAn9jw40BQXpLFWX4T2tXXHSwWy+xeqLnTi3us5OOl0KVKAzt/2IFdfsZIvGNujdnLMNvB5h7tFPLD6LQ5NXUpMvQN/AJhvS3OBIIpFt+Tv55yeNcg0pNmH1MnVwIDAQAB" )  ; ----- DKIM key default for rock-1st.com

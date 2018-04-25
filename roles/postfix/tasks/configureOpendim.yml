@@ -1,0 +1,107 @@
+---
+
+ #tasks file for opendkim
+ - name: installng opendkim
+   package:
+     name: "{{ opendkim_package  }}"
+     state: latest
+
+ #creating dkim users
+ - name: creating domain directories under keys
+   file:
+     path: "/etc/opendkim/keys/{{ item  }}"
+     state: directory
+     owner: "{{ dkimuser  }}"
+     group: "{{ dkimgroup  }}"
+     mode: 0755
+   with_items:
+     "{{ domains }}"
+
+ - name: copying default file to each domain
+   copy:
+    src: "../files/default.private"
+    dest:  "/etc/opendkim/keys/{{ item }}/default"
+    owner: "{{ dkimuser  }}"
+    group: "{{ dkimgroup  }}"
+    mode: 0600
+   with_items:
+      "{{ domains }}"
+
+ - name: Editing Key Table
+   lineinfile:
+      dest: "{{ opendkim_keyfile }}"
+      line: "default._domainkey.{{ item  }} {{ item }}:default:/etc/opendkim/keys/{{ item  }}/default"
+      state: present
+   with_items:
+      "{{ domains }}"
+
+ - name: Editing Key Sigining Table
+   lineinfile:
+      dest: "{{ opendkim_signingfile }}"
+      line: "*@{{ item }} default._domainkey.{{ item }}"
+      state: present
+   with_items:
+      "{{ domains }}"
+
+ - name: Uncomment line from {{ opendkim_config_file }}
+   replace:
+      dest: "{{ opendkim_config_file }}"
+      regexp: '^#\s*KeyTable.*$'
+      replace: 'KeyTable refile:/etc/opendkim/KeyTable'
+
+
+ - name: Uncomment line from keyfile
+   replace:
+      dest: "{{ opendkim_config_file }}"
+      regexp: '^KeyFile.*$'
+      replace: '#KeyFile /etc/opendkim/keys/default.private'
+
+ - name: Uncomment line from {{ opendkim_config_file }}
+   replace:
+      dest: "{{ opendkim_config_file }}"
+      regexp: '^#\s*SigningTable.*$'
+      replace: 'SigningTable refile:/etc/opendkim/SigningTable'
+
+ - name: Changing mode to sv
+   replace:
+      dest: "{{ opendkim_config_file }}"
+      regexp: '^Mode.*$'
+      replace: 'Mode    sv'
+      backup: yes
+
+ - name: Changing Umask to 022
+   replace:
+      dest: "{{ opendkim_config_file }}"
+      regexp: '^Umask.*$'
+      replace: 'Umask   022'
+      backup: yes
+
+ - name: Changing Canonicalization to relaxed/simple
+   replace:
+      dest: "{{ opendkim_config_file }}"
+      regexp: '^Canonicalization(\s+.*)$'
+      replace: 'Canonicalization        relaxed/simple'
+      backup: yes
+
+ - name: uncommenting ExternalIgnoreList
+   replace:
+      dest: "{{ opendkim_config_file }}"
+      regexp: '^#\s*ExternalIgnoreList.*$'
+      replace: 'ExternalIgnoreList      refile:/etc/opendkim/TrustedHosts'
+
+ - name: uncommenting InternalHosts.
+   replace:
+      dest: "{{ opendkim_config_file }}"
+      regexp: '^#\s*InternalHosts.*$'
+      replace: 'InternalHosts   refile:/etc/opendkim/TrustedHosts'
+
+ - name: copying trusted hosts file
+   copy:
+    src: "../files/TrustedHosts"
+    dest: "/etc/opendkim/TrustedHosts"
+
+ - name: Ensure opendkim is started and enabled at boot.
+   service:
+     name: opendkim
+     state: started
+     enabled: yes
